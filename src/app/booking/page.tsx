@@ -28,6 +28,8 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { BookingDetailModal } from "@/components/bookingDetailModal";
+import { EditTicketModal } from "@/components/editTicketModal";
+import { CartItemInterface } from "@/models/cartItem-interface";
 
 export default function BookingPage() {
   const [data, setData] = useState<BookingInterface[]>([]);
@@ -54,6 +56,11 @@ export default function BookingPage() {
     BookingDetailInterface[]
   >([]);
 
+  // Edit ticket modal state
+  const [editOpen, setEditOpen] = useState<boolean>(false);
+  const [editBookingId, setEditBookingId] = useState<number | null>(null);
+  const [editDetails, setEditDetails] = useState<BookingDetailInterface[]>([]);
+
   const handleViewDetail = useCallback((bookingId: number) => {
     setSelectedBookingId(bookingId);
     BookingAPI.getBookingDetail({ BookedTicketId: bookingId })
@@ -69,6 +76,43 @@ export default function BookingPage() {
         }
       });
   }, []);
+
+  const handleEditTicket = useCallback((bookingId: number) => {
+    setEditBookingId(bookingId);
+    BookingAPI.getBookingDetail({ BookedTicketId: bookingId })
+      .then((res) => {
+        setEditDetails(res);
+        setEditOpen(true);
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          console.log(error.message);
+        } else {
+          console.log("Failed to fetch booking detail for edit");
+        }
+      });
+  }, []);
+
+  const handleUpdateQuantity = useCallback(
+    (bookingId: number, items: CartItemInterface[]) => {
+      BookingAPI.updateBookingdetail({
+        BookedTicketId: bookingId,
+        request: items,
+      })
+        .then(() => {
+          setEditOpen(false);
+          setRefreshTrigger((prev) => prev + 1);
+        })
+        .catch((error) => {
+          if (error instanceof Error) {
+            console.log(error.message);
+          } else {
+            console.log("Failed to update booking");
+          }
+        });
+    },
+    [],
+  );
 
   const handleRevoke = useCallback(
     (ticketCode: string, qty: number) => {
@@ -114,8 +158,8 @@ export default function BookingPage() {
   );
 
   const columns = useMemo(
-    () => createColumns(handleViewDetail),
-    [handleViewDetail],
+    () => createColumns(handleViewDetail, handleEditTicket),
+    [handleViewDetail, handleEditTicket],
   );
 
   //fetch data
@@ -263,6 +307,14 @@ export default function BookingPage() {
         bookingId={selectedBookingId}
         details={bookingDetails}
         onRevoke={handleRevoke}
+      />
+
+      <EditTicketModal
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        bookingId={editBookingId}
+        details={editDetails}
+        onSubmit={handleUpdateQuantity}
       />
     </div>
   );

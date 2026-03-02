@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 interface BookingDetailModalProps {
   open: boolean;
@@ -76,17 +76,6 @@ export function BookingDetailModal({
                         </p>
                       </div>
                       <div className="flex items-center gap-2 ml-3 shrink-0">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            // TODO: implement edit quantity
-                          }}
-                          className="gap-1 text-slight-black hover:cursor-pointer"
-                        >
-                          <Pencil className="h-3 w-3" />
-                          Edit Qty
-                        </Button>
                         <Button
                           variant="outline"
                           size="sm"

@@ -87,4 +87,29 @@ export const BookingAPI = {
 
     return await res.json();
   },
+  updateBookingdetail: async function ({
+    BookedTicketId,
+    request,
+  }: {
+    BookedTicketId: number;
+    request: CartItemInterface[];
+  }) {
+    const url = `${api.BASE_URL_LOCAL}edit-booked-ticket/${BookedTicketId}`;
+
+    const res = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Items: request,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`API error: ${res.status}`);
+    }
+
+    return await res.json();
+  },
 };
