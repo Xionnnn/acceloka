@@ -1,6 +1,6 @@
 export interface BookingInterface {
-  BookingId: number;
-  BookingDate: string;
-  BookingQuantity: number;
-  BookingPrice: number;
+  bookingId: number;
+  bookingDate: string;
+  bookingQuantity: number;
+  bookingPrice: number;
 }
