@@ -1,4 +1,4 @@
-export interface GetAvailableTicketRequest {
+export interface GetAvailableTicketInterface {
   CategoryName?: string;
   TicketCode?: string;
   TicketName?: string;

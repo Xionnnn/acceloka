@@ -56,15 +56,10 @@ export function DataTable<TData, TValue>({
   hasPreviousPage,
   onPageChange,
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({});
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onRowSelectionChange: setRowSelection,
-    state: {
-      rowSelection,
-    },
   });
 
   const handleSort = (columnId: string) => {
@@ -136,15 +131,7 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className={
-                    row.getIsSelected()
-                      ? "text-slight-black"
-                      : ""
-                  }
-                >
+                <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
@@ -174,15 +161,16 @@ export function DataTable<TData, TValue>({
 
       {/* Pagination */}
       <div className="flex items-center justify-between px-2 py-4">
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-foreground">
           Page {pageNumber} of {totalPages}
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 ">
           <Button
             variant="outline"
             size="sm"
             onClick={() => onPageChange(1)}
             disabled={!hasPreviousPage}
+            className="border border-dark-brown"
           >
             <ChevronsLeft className="h-4 w-4" />
           </Button>
@@ -191,6 +179,7 @@ export function DataTable<TData, TValue>({
             size="sm"
             onClick={() => onPageChange(pageNumber - 1)}
             disabled={!hasPreviousPage}
+            className="border border-dark-brown"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -199,6 +188,7 @@ export function DataTable<TData, TValue>({
             size="sm"
             onClick={() => onPageChange(pageNumber + 1)}
             disabled={!hasNextPage}
+            className="border border-dark-brown"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -207,6 +197,7 @@ export function DataTable<TData, TValue>({
             size="sm"
             onClick={() => onPageChange(totalPages)}
             disabled={!hasNextPage}
+            className="border border-dark-brown"
           >
             <ChevronsRight className="h-4 w-4" />
           </Button>

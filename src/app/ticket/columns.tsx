@@ -2,21 +2,12 @@
 
 import { TicketInterface } from "@/models/ticket-interface";
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
 
-export const columns: ColumnDef<TicketInterface>[] = [
-  {
-    id: "select",
-    header: "Select",
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-  },
+export const createColumns = (
+  onAddToCart: (ticket: TicketInterface) => void,
+): ColumnDef<TicketInterface>[] => [
   {
     accessorKey: "ticketCode",
     header: "Ticket Code",
@@ -40,5 +31,21 @@ export const columns: ColumnDef<TicketInterface>[] = [
   {
     accessorKey: "quota",
     header: "Quota",
+  },
+  {
+    id: "action",
+    header: "Action",
+    enableSorting: false,
+    cell: ({ row }) => (
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => onAddToCart(row.original)}
+        className="gap-2 text-slight-black hover:cursor-pointer"
+      >
+        <ShoppingCart className="h-4 w-4" />
+        Add
+      </Button>
+    ),
   },
 ];

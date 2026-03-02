@@ -1,8 +1,8 @@
 import api from "./api";
-import { GetAvailableTicketRequest } from "@/models/getAvailableTicket-Request";
+import { GetAvailableTicketInterface } from "@/models/getAvailableTicket-interface";
 
 export const ticketAPI = {
-  getAvailableTicket: async function (request: GetAvailableTicketRequest) {
+  getAvailableTicket: async function (request: GetAvailableTicketInterface) {
     const params = {
       categoryName: request.CategoryName,
       TicketCode: request.TicketCode,

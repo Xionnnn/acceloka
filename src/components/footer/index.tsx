@@ -3,7 +3,7 @@ import * as motion from "motion/react-client";
 
 export default function Footer() {
   return (
-    <div className="mt-auto px-10 py-10 border-t w-full min-h-40 flex justify-around ">
+    <div className="mt-auto px-10 py-10 border-t border-slight-black/20 w-full min-h-40 flex justify-around ">
       <div className="text-xl">
         Acceloka
         <div className="text-sm">Since 2026</div>
