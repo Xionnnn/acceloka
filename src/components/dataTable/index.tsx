@@ -56,10 +56,15 @@ export function DataTable<TData, TValue>({
   hasPreviousPage,
   onPageChange,
 }: DataTableProps<TData, TValue>) {
+  const [rowSelection, setRowSelection] = React.useState({});
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onRowSelectionChange: setRowSelection,
+    state: {
+      rowSelection,
+    },
   });
 
   const handleSort = (columnId: string) => {
@@ -100,6 +105,8 @@ export function DataTable<TData, TValue>({
                       key={header.id}
                       className="text-off-white border-l border-off-white first:border-l-0 px-8 cursor-pointer select-none"
                       onClick={() => {
+                        if (!header.column.columnDef.enableSorting === false)
+                          return;
                         const formattedColumnId =
                           header.column.id[0].toUpperCase() +
                           header.column.id.slice(1);
@@ -114,6 +121,7 @@ export function DataTable<TData, TValue>({
                               header.getContext(),
                             )}
                         {!header.isPlaceholder &&
+                          header.column.columnDef.enableSorting !== false &&
                           getSortIcon(
                             header.column.id[0].toUpperCase() +
                               header.column.id.slice(1),
@@ -131,6 +139,11 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={
+                    row.getIsSelected()
+                      ? "text-slight-black"
+                      : ""
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
