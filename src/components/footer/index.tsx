@@ -16,7 +16,7 @@ export default function Footer() {
           whileHover={{ scale: 1.2 }}
           transition={{ duration: 0.1 }}
         >
-          <Link href="/about">Ticket</Link>
+          <Link href="/ticket">Ticket</Link>
         </motion.div>
         <motion.div
           style={{ transformOrigin: "left center" }}
@@ -24,7 +24,7 @@ export default function Footer() {
           whileHover={{ scale: 1.2 }}
           transition={{ duration: 0.1 }}
         >
-          <Link href="/about">Booking</Link>
+          <Link href="/booking">Booking</Link>
         </motion.div>
       </div>
     </div>

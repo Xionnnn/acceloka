@@ -22,7 +22,7 @@ export default function Header() {
           whileHover={{ scale: 1.2 }}
           transition={{ duration: 0.1 }}
         >
-          <Link href="#">Bookings</Link>
+          <Link href="/booking">Bookings</Link>
         </motion.div>
       </div>
     </div>
