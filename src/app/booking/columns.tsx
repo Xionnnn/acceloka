@@ -5,7 +5,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
 
-export const columns: ColumnDef<BookingInterface>[] = [
+export const createColumns = (
+  onViewDetail: (bookingId: number) => void,
+): ColumnDef<BookingInterface>[] => [
   {
     accessorKey: "bookingId",
     header: "Booking ID",
@@ -30,10 +32,7 @@ export const columns: ColumnDef<BookingInterface>[] = [
       <Button
         variant="outline"
         size="sm"
-        onClick={() => {
-          // TODO: implement view detail
-          console.log("View detail for booking:", row.original.BookingId);
-        }}
+        onClick={() => onViewDetail(row.original.bookingId)}
         className="gap-2 text-slight-black hover:cursor-pointer"
       >
         <Eye className="h-4 w-4" />

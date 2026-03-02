@@ -1,11 +1,12 @@
 "use client";
-import { columns } from "./columns";
+import { createColumns } from "./columns";
 import { DataTable } from "../../components/dataTable";
 import { Button } from "@/components/ui/button";
 import { Search, BookOpen } from "lucide-react";
 import { BookingInterface } from "@/models/booking-interface";
+import { BookingDetailInterface } from "@/models/bookingDetail-interface";
 import { BookingAPI } from "@/apis/bookingAPI";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { GetBookingInterface } from "@/models/getBooking-interface";
 import {
   InputGroup,
@@ -26,6 +27,7 @@ import { type DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
+import { BookingDetailModal } from "@/components/bookingDetailModal";
 
 export default function BookingPage() {
   const [data, setData] = useState<BookingInterface[]>([]);
@@ -41,6 +43,80 @@ export default function BookingPage() {
   const [hasPreviousPage, setHasPreviousPage] = useState<boolean>(false);
   const [priceInput, setPriceInput] = useState<string>("");
   const [debouncedPrice] = useDebounce(priceInput, 600);
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+
+  // Booking detail modal state
+  const [detailOpen, setDetailOpen] = useState<boolean>(false);
+  const [selectedBookingId, setSelectedBookingId] = useState<number | null>(
+    null,
+  );
+  const [bookingDetails, setBookingDetails] = useState<
+    BookingDetailInterface[]
+  >([]);
+
+  const handleViewDetail = useCallback((bookingId: number) => {
+    setSelectedBookingId(bookingId);
+    BookingAPI.getBookingDetail({ BookedTicketId: bookingId })
+      .then((res) => {
+        setBookingDetails(res);
+        setDetailOpen(true);
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          console.log(error.message);
+        } else {
+          console.log("Failed to fetch booking detail");
+        }
+      });
+  }, []);
+
+  const handleRevoke = useCallback(
+    (ticketCode: string, qty: number) => {
+      if (!selectedBookingId) return;
+
+      BookingAPI.revokeBookingdetail({
+        BookedTicketId: selectedBookingId,
+        TicketCode: ticketCode,
+        Qty: qty,
+      })
+        .then(() => {
+          BookingAPI.getBookingDetail({ BookedTicketId: selectedBookingId })
+            .then((res) => {
+              if (
+                !res ||
+                res.length === 0 ||
+                res.every((c: BookingDetailInterface) => c.tickets.length === 0)
+              ) {
+                setDetailOpen(false);
+                setBookingDetails([]);
+                setSelectedBookingId(null);
+                setRefreshTrigger((prev) => prev + 1);
+              } else {
+                setBookingDetails(res);
+              }
+            })
+            .catch(() => {
+              setDetailOpen(false);
+              setBookingDetails([]);
+              setSelectedBookingId(null);
+              setRefreshTrigger((prev) => prev + 1);
+            });
+        })
+        .catch((error) => {
+          if (error instanceof Error) {
+            console.log(error.message);
+          } else {
+            console.log("Failed to revoke ticket");
+          }
+        });
+    },
+    [selectedBookingId],
+  );
+
+  const columns = useMemo(
+    () => createColumns(handleViewDetail),
+    [handleViewDetail],
+  );
 
   //fetch data
   useEffect(() => {
@@ -83,6 +159,7 @@ export default function BookingPage() {
     pageNumber,
     pageSize,
     debouncedPrice,
+    refreshTrigger,
   ]);
 
   return (
@@ -179,6 +256,14 @@ export default function BookingPage() {
           onPageChange={setPageNumber}
         />
       </div>
+
+      <BookingDetailModal
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        bookingId={selectedBookingId}
+        details={bookingDetails}
+        onRevoke={handleRevoke}
+      />
     </div>
   );
 }

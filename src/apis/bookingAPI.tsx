@@ -49,10 +49,38 @@ export const BookingAPI = {
 
     return await res.json();
   },
-  getBookingDetail: async function ({ request }: { request: number }) {
-    const url = `${api.BASE_URL_LOCAL}get-booked-ticket/${request}`;
+  getBookingDetail: async function ({
+    BookedTicketId,
+  }: {
+    BookedTicketId: number;
+  }) {
+    const url = `${api.BASE_URL_LOCAL}get-booked-ticket/${BookedTicketId}`;
 
     const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`API error: ${res.status}`);
+    }
+
+    return await res.json();
+  },
+  revokeBookingdetail: async function ({
+    BookedTicketId,
+    TicketCode,
+    Qty,
+  }: {
+    BookedTicketId: number;
+    TicketCode: string;
+    Qty: number;
+  }) {
+    const url = `${api.BASE_URL_LOCAL}revoke-ticket/${BookedTicketId}/${TicketCode}/${Qty}`;
+
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
     if (!res.ok) {
       throw new Error(`API error: ${res.status}`);
     }
