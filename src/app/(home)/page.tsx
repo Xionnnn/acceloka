@@ -1,6 +1,7 @@
 import { ArrowDown, Clapperboard, Hotel, Ship, Van } from "lucide-react";
 import Image from "next/image";
 import * as motion from "motion/react-client";
+import Link from "next/link";
 
 export default function Main() {
   return (
@@ -78,9 +79,9 @@ export default function Main() {
           ground transport, sea voyages, flights, and hotels — all in one
           refined booking experience.
         </p>
-        <button className="border rounded-lg px-6 py-2 hover:bg-foreground hover:text-background transition-colors cursor-pointer">
+        <Link href="/ticket" className="border rounded-lg px-6 py-2 hover:bg-foreground hover:text-background transition-colors cursor-pointer">
           View available tickets
-        </button>
+        </Link>
         <motion.div
           className="absolute right-6 bottom-7 hidden lg:block"
           initial={{opacity: 0, x: 100}}
