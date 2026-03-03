@@ -36,7 +36,6 @@ export function EditTicketModal({
   details,
   onSubmit,
 }: EditTicketModalProps) {
-  // Derive flat ticket list from details
   const initialTickets = useMemo<EditableTicket[]>(() => {
     const flat: EditableTicket[] = [];
     for (const category of details) {
@@ -59,7 +58,6 @@ export function EditTicketModal({
 
   const [tickets, setTickets] = useState<EditableTicket[]>(initialTickets);
 
-  // Reset local state when initialTickets change (new detail loaded)
   useEffect(() => {
     setTickets(initialTickets);
   }, [initialTickets]);

@@ -10,7 +10,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { Trash2 } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
+import { useState, useMemo } from "react";
 
 interface BookingDetailModalProps {
   open: boolean;
@@ -27,6 +28,33 @@ export function BookingDetailModal({
   details,
   onRevoke,
 }: BookingDetailModalProps) {
+  const [revokeQuantities, setRevokeQuantities] = useState<Record<string, number>>({});
+  const [prevBookingId, setPrevBookingId] = useState<number | null>(null);
+
+  if (bookingId !== prevBookingId) {
+    setPrevBookingId(bookingId);
+    setRevokeQuantities({});
+  }
+
+  const displayDetails = useMemo(
+    () =>
+      details.map((cat) => ({
+        ...cat,
+        tickets: cat.tickets.map((t) => ({
+          ...t,
+          qtyToRevoke: revokeQuantities[t.ticketCode] ?? 0,
+        })),
+      })),
+    [details, revokeQuantities],
+  );
+
+  const updateQuantity = (ticketCode: string, delta: number) => {
+    setRevokeQuantities((prev) => {
+      const current = prev[ticketCode] ?? 0;
+      return { ...prev, [ticketCode]: Math.max(0, current + delta) };
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-150">
@@ -38,12 +66,12 @@ export function BookingDetailModal({
         </DialogHeader>
 
         <div className="max-h-100 overflow-y-auto space-y-4">
-          {details.length === 0 ? (
+          {displayDetails.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">
               No details found.
             </p>
           ) : (
-            details.map((category, index) => (
+            displayDetails.map((category, index) => (
               <div key={category.categoryName}>
                 {index > 0 && <Separator className="my-4 bg-slight-black/20" />}
 
@@ -78,12 +106,38 @@ export function BookingDetailModal({
                       <div className="flex items-center gap-2 ml-3 shrink-0">
                         <Button
                           variant="outline"
+                          size="icon"
+                          className="h-7 w-7 hover:cursor-pointer"
+                          onClick={() => updateQuantity(ticket.ticketCode, -1)}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+
+                        <span className="w-8 text-center text-sm font-medium">
+                          {ticket.qtyToRevoke}
+                        </span>
+
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-7 w-7 hover:cursor-pointer"
+                          onClick={() => updateQuantity(ticket.ticketCode, 1)}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-2 ml-3 shrink-0">
+                        <Button
+                          variant="outline"
                           size="sm"
-                          onClick={() => onRevoke(ticket.ticketCode, 1)}
+                          disabled={ticket.qtyToRevoke <= 0}
+                          onClick={() =>
+                            onRevoke(ticket.ticketCode, ticket.qtyToRevoke)
+                          }
                           className="gap-1 text-destructive hover:text-destructive hover:cursor-pointer"
                         >
                           <Trash2 className="h-3 w-3" />
-                          Revoke
+                          Revoke ({ticket.qtyToRevoke})
                         </Button>
                       </div>
                     </div>

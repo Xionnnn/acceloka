@@ -65,12 +65,18 @@ export default function BookingPage() {
     setSelectedBookingId(bookingId);
     BookingAPI.getBookingDetail({ BookedTicketId: bookingId })
       .then((res) => {
+        res.map((item: BookingDetailInterface) => {
+          item.tickets.map((ticket) => {
+            ticket.qtyToRevoke = 0;
+          });
+        });
+        console.log(res);
         setBookingDetails(res);
         setDetailOpen(true);
       })
       .catch((error) => {
         if (error instanceof Error) {
-          console.log(error.message);
+          alert("Something went wrong with status: " + error.message);
         } else {
           console.log("Failed to fetch booking detail");
         }
@@ -86,7 +92,7 @@ export default function BookingPage() {
       })
       .catch((error) => {
         if (error instanceof Error) {
-          console.log(error.message);
+          alert("Something went wrong with status: " + error.message);
         } else {
           console.log("Failed to fetch booking detail for edit");
         }
@@ -102,14 +108,15 @@ export default function BookingPage() {
         .then(() => {
           setEditOpen(false);
           setRefreshTrigger((prev) => prev + 1);
+          alert("Booked ticket quantity have been successfully updated");
         })
         .catch((error) => {
           if (error instanceof Error) {
-            console.log(error.message);
+            alert("Something went wrong with status: " + error.message);
           } else {
             console.log("Failed to update booking");
           }
-        });
+        })
     },
     [],
   );
@@ -138,6 +145,8 @@ export default function BookingPage() {
               } else {
                 setBookingDetails(res);
               }
+
+              alert("Ticket have been successfully revoked");
             })
             .catch(() => {
               setDetailOpen(false);
@@ -148,11 +157,11 @@ export default function BookingPage() {
         })
         .catch((error) => {
           if (error instanceof Error) {
-            console.log(error.message);
+            alert("Something went wrong with status: " + error.message);
           } else {
             console.log("Failed to revoke ticket");
           }
-        });
+        })
     },
     [selectedBookingId],
   );
@@ -190,7 +199,7 @@ export default function BookingPage() {
       })
       .catch((error) => {
         if (error instanceof Error) {
-          console.log(error.message);
+          alert("Something went wrong with status: " + error.message);
         } else {
           console.log("Failed to fetch Booking");
         }

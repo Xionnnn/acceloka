@@ -15,11 +15,18 @@ import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import { BookingAPI } from "@/apis/bookingAPI";
 
 interface CartModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   cartItems: CartItemInterface[];
   setCartItems: (cartItems: CartItemInterface[]) => void;
 }
 
-export function CartModal({ cartItems, setCartItems }: CartModalProps) {
+export function CartModal({
+  open,
+  onOpenChange,
+  cartItems,
+  setCartItems,
+}: CartModalProps) {
   const updateQuantity = (ticketCode: string, delta: number) => {
     const updated = cartItems
       .map((item) =>
@@ -37,24 +44,30 @@ export function CartModal({ cartItems, setCartItems }: CartModalProps) {
   };
 
   const handleSubmit = () => {
-    BookingAPI.bookTicket({request: cartItems})
-    .then(res=>{
-      console.log(res);
-    })
-    .catch(error=>{
-      if(error instanceof Error){
-        console.log(error.message);
-      }
-      console.log("API Error");
-    })
+    BookingAPI.bookTicket({ request: cartItems })
+      .then(() => {
+        alert("Booking has been made successfully");
+        setCartItems([]);
+        onOpenChange(false);
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          alert("Something went wrong with status: " + error.message);
+        } else {
+          console.log("Failed to book ticket");
+        }
+      });
   };
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.Quantity, 0);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="border-slight-black gap-2 hover:cursor-pointer">
+        <Button
+          variant="outline"
+          className="border-slight-black gap-2 hover:cursor-pointer"
+        >
           <ShoppingCart className="h-4 w-4" />
           View Cart {totalItems > 0 && `(${totalItems})`}
         </Button>

@@ -51,6 +51,7 @@ export default function Main() {
   const [cartItems, setCartItems] = useState<CartItemInterface[]>([]);
   const [priceInput, setPriceInput] = useState<string>("");
   const [debouncedPrice] = useDebounce(priceInput, 600);
+  const [cartOpen, setCartOpen] = useState<boolean>(false);
 
   const handleAddToCart = useCallback((ticket: TicketInterface) => {
     setCartItems((prev) => {
@@ -100,7 +101,7 @@ export default function Main() {
       })
       .catch((error) => {
         if (error instanceof Error) {
-          console.log(error.message);
+          alert("Something went wrong with status: " + error.message);
         } else {
           console.log("Failed to fetch Ticket");
         }
@@ -223,7 +224,12 @@ export default function Main() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <CartModal cartItems={cartItems} setCartItems={setCartItems} />
+            <CartModal
+              open={cartOpen}
+              onOpenChange={setCartOpen}
+              cartItems={cartItems}
+              setCartItems={setCartItems}
+            />
           </div>
         </div>
 
