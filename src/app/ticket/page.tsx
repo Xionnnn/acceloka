@@ -29,6 +29,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { CartModal } from "@/components/cartModal";
 import { Input } from "@/components/ui/input";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Main() {
   const [data, setData] = useState<TicketInterface[]>([]);
@@ -101,7 +102,9 @@ export default function Main() {
       })
       .catch((error) => {
         if (error instanceof Error) {
-          alert("Something went wrong with status: " + error.message);
+          toast.error("Something went wrong with status: " + error.message, {
+            position: "top-right",
+          });
         } else {
           console.log("Failed to fetch Ticket");
         }
@@ -119,6 +122,7 @@ export default function Main() {
 
   return (
     <div className="h-full flex flex-col justify-center px-4 sm:px-10 md:px-20 lg:px-30 py-10 sm:py-20">
+      <Toaster />
       <div className="border-2 p-4 border-slight-black/20 rounded-lg">
         <div className="flex">
           Get Available Ticket{" "}

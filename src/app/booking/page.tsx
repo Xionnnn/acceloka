@@ -30,6 +30,8 @@ import { Input } from "@/components/ui/input";
 import { BookingDetailModal } from "@/components/bookingDetailModal";
 import { EditTicketModal } from "@/components/editTicketModal";
 import { CartItemInterface } from "@/models/cartItem-interface";
+import toast, { Toaster } from "react-hot-toast";
+import { EditTicketInterface } from "@/models/editTicket-interface";
 
 export default function BookingPage() {
   const [data, setData] = useState<BookingInterface[]>([]);
@@ -76,7 +78,7 @@ export default function BookingPage() {
       })
       .catch((error) => {
         if (error instanceof Error) {
-          alert("Something went wrong with status: " + error.message);
+          toast.error("Something went wrong with status: " + error.message,{position:"top-right"});
         } else {
           console.log("Failed to fetch booking detail");
         }
@@ -92,7 +94,9 @@ export default function BookingPage() {
       })
       .catch((error) => {
         if (error instanceof Error) {
-          alert("Something went wrong with status: " + error.message);
+          toast.error("Something went wrong with status: " + error.message, {
+            position: "top-right",
+          });
         } else {
           console.log("Failed to fetch booking detail for edit");
         }
@@ -105,14 +109,27 @@ export default function BookingPage() {
         BookedTicketId: bookingId,
         request: items,
       })
-        .then(() => {
+        .then((res) => {
           setEditOpen(false);
           setRefreshTrigger((prev) => prev + 1);
-          alert("Booked ticket quantity have been successfully updated");
+          toast.success(
+            `Booked Ticket have been updated with this detail:\n\n${res
+              .map(
+                (item: EditTicketInterface) =>
+                  `Ticket Code: ${item.ticketCode}\nTicket Quantity: ${item.quantity}\n\n`,
+              )
+              .join("")}`,
+            {
+              duration: 3000,
+              position: "top-right",
+            },
+          );
         })
         .catch((error) => {
           if (error instanceof Error) {
-            alert("Something went wrong with status: " + error.message);
+            toast.error("Something went wrong with status: " + error.message, {
+              position: "top-right",
+            });
           } else {
             console.log("Failed to update booking");
           }
@@ -130,7 +147,7 @@ export default function BookingPage() {
         TicketCode: ticketCode,
         Qty: qty,
       })
-        .then(() => {
+        .then((res) => {
           BookingAPI.getBookingDetail({ BookedTicketId: selectedBookingId })
             .then((res) => {
               if (
@@ -145,8 +162,6 @@ export default function BookingPage() {
               } else {
                 setBookingDetails(res);
               }
-
-              alert("Ticket have been successfully revoked");
             })
             .catch(() => {
               setDetailOpen(false);
@@ -154,10 +169,20 @@ export default function BookingPage() {
               setSelectedBookingId(null);
               setRefreshTrigger((prev) => prev + 1);
             });
+          toast.success(
+            `Booked Ticket have been revoked with this detail:\n\n Ticket Code: ${res.ticketCode} \n Ticket Name: ${res.ticketName} \n Ticket Category: ${res.ticketCategory} \n Quantity left:  ${res.quantity}`,
+            {
+              duration: 3000,
+              position: "top-right",
+            },
+          );
         })
         .catch((error) => {
           if (error instanceof Error) {
-            alert("Something went wrong with status: " + error.message);
+            toast.error(
+              "Something went wrong with status: " + error.message,
+              { position: "top-right" },
+            );
           } else {
             console.log("Failed to revoke ticket");
           }
@@ -199,7 +224,7 @@ export default function BookingPage() {
       })
       .catch((error) => {
         if (error instanceof Error) {
-          alert("Something went wrong with status: " + error.message);
+          toast.error("Something went wrong with status: " + error.message,{position:"top-right"});
         } else {
           console.log("Failed to fetch Booking");
         }
@@ -217,6 +242,7 @@ export default function BookingPage() {
 
   return (
     <div className="h-full flex flex-col justify-center px-4 sm:px-10 md:px-20 lg:px-30 py-10 sm:py-20">
+      <Toaster />
       <div className="border-2 p-4 border-slight-black/20 rounded-lg">
         <div className="flex">
           Get Booked Tickets{" "}

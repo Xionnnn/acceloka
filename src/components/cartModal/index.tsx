@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import { BookingAPI } from "@/apis/bookingAPI";
+import toast, { Toaster } from "react-hot-toast";
 
 interface CartModalProps {
   open: boolean;
@@ -45,14 +46,22 @@ export function CartModal({
 
   const handleSubmit = () => {
     BookingAPI.bookTicket({ request: cartItems })
-      .then(() => {
-        alert("Booking has been made successfully");
+      .then((res) => {
+        toast.success(
+          `The order is successful with this detail:\n\n Total Price: ${res.priceSummary} \n Quantity of tickets ordered: ${cartItems.reduce((sum, item) => sum + item.Quantity, 0)}`,
+          {
+            duration: 3000,
+            position: "top-right",
+          },
+        );
         setCartItems([]);
         onOpenChange(false);
       })
       .catch((error) => {
         if (error instanceof Error) {
-          alert("Something went wrong with status: " + error.message);
+          toast.error("Something went wrong with status: " + error.message, {
+            position: "top-right",
+          });
         } else {
           console.log("Failed to book ticket");
         }
@@ -63,6 +72,7 @@ export function CartModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
+      <Toaster />
       <DialogTrigger asChild>
         <Button
           variant="outline"
