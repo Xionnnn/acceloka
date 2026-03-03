@@ -1,4 +1,4 @@
-<img width="392" height="106" alt="image" src="https://github.com/user-attachments/assets/63e82743-f8c1-48bc-b350-2122da2cadc2" /># Acceloka Web Doccumentation
+# Acceloka Web Doccumentation
 ## **About**
 This is the repository for the AccelokaAPI Web UI.
 
