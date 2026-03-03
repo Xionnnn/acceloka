@@ -107,42 +107,46 @@ export function BookingDetailModal({
                           {ticket.eventDate}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2 ml-3 shrink-0">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-7 w-7 hover:cursor-pointer"
-                          onClick={() => updateQuantity(ticket.ticketCode, -1)}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
+                      <div className="flex flex-col items-center justify-center sm:flex-row">
+                        <div className="flex items-center gap-2 ml-3 shrink-0">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-7 w-7 hover:cursor-pointer"
+                            onClick={() =>
+                              updateQuantity(ticket.ticketCode, -1)
+                            }
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
 
-                        <span className="w-8 text-center text-sm font-medium">
-                          {ticket.qtyToRevoke}
-                        </span>
+                          <span className="w-8 text-center text-sm font-medium">
+                            {ticket.qtyToRevoke}
+                          </span>
 
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-7 w-7 hover:cursor-pointer"
-                          onClick={() => updateQuantity(ticket.ticketCode, 1)}
-                        >
-                          <Plus className="h-3 w-3" />
-                        </Button>
-                      </div>
-                      <div className="flex items-center gap-2 ml-3 shrink-0">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={ticket.qtyToRevoke <= 0}
-                          onClick={() =>
-                            onRevoke(ticket.ticketCode, ticket.qtyToRevoke)
-                          }
-                          className="gap-1 text-destructive hover:text-destructive hover:cursor-pointer"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                          Revoke ({ticket.qtyToRevoke})
-                        </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-7 w-7 hover:cursor-pointer"
+                            onClick={() => updateQuantity(ticket.ticketCode, 1)}
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <div className="flex items-center gap-2 ml-3 shrink-0">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={ticket.qtyToRevoke <= 0}
+                            onClick={() =>
+                              onRevoke(ticket.ticketCode, ticket.qtyToRevoke)
+                            }
+                            className="gap-1 text-destructive hover:text-destructive hover:cursor-pointer"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            Revoke ({ticket.qtyToRevoke})
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   ))}
