@@ -57,10 +57,12 @@ export function EditTicketModal({
   }, [details]);
 
   const [tickets, setTickets] = useState<EditableTicket[]>(initialTickets);
+  const [prevBookingId, setPrevBookingId] = useState<number | null>(null);
 
-  useEffect(() => {
+  if (bookingId !== prevBookingId) {
+    setPrevBookingId(bookingId);
     setTickets(initialTickets);
-  }, [initialTickets]);
+  }
 
   const updateQuantity = (ticketCode: string, delta: number) => {
     setTickets((prev) =>
@@ -149,7 +151,9 @@ export function EditTicketModal({
         <DialogFooter>
           <Button
             onClick={handleUpdate}
-            disabled={tickets.length === 0}
+            disabled={
+              tickets.length === 0 || tickets.some((item) => item.quantity <= 0)
+            }
             className="w-full hover:cursor-pointer"
           >
             Update Quantity

@@ -89,8 +89,8 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="overflow-hidden rounded-md border bg-dark-brown text-off-white">
-        <Table>
+      <div className="overflow-x-auto rounded-md border bg-dark-brown text-off-white">
+        <Table className="min-w-150">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -98,7 +98,7 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      className="text-off-white border-l border-off-white first:border-l-0 px-8 cursor-pointer select-none"
+                      className="text-off-white border-l border-off-white first:border-l-0 px-3 sm:px-8 cursor-pointer select-none"
                       onClick={() => {
                         if (!header.column.columnDef.enableSorting === false)
                           return;
@@ -135,7 +135,7 @@ export function DataTable<TData, TValue>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className="border-l border-off-white first:border-l-0 px-8"
+                      className="border-l border-off-white first:border-l-0 px-3 sm:px-8"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -160,7 +160,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between px-2 py-4">
+      <div className="flex flex-col gap-2 sm:flex-row items-center justify-between px-2 py-4">
         <div className="text-sm text-foreground">
           Page {pageNumber} of {totalPages}
         </div>

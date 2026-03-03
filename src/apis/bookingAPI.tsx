@@ -63,7 +63,7 @@ export const BookingAPI = {
 
     return await res.json();
   },
-  revokeBookingdetail: async function ({
+  revokeBookingDetail: async function ({
     BookedTicketId,
     TicketCode,
     Qty,
@@ -87,7 +87,7 @@ export const BookingAPI = {
 
     return await res.json();
   },
-  updateBookingdetail: async function ({
+  updateBookingDetail: async function ({
     BookedTicketId,
     request,
   }: {

@@ -118,15 +118,15 @@ export default function Main() {
   ]);
 
   return (
-    <div className="h-full flex flex-col justify-center px-30 py-20">
+    <div className="h-full flex flex-col justify-center px-4 sm:px-10 md:px-20 lg:px-30 py-10 sm:py-20">
       <div className="border-2 p-4 border-slight-black/20 rounded-lg">
         <div className="flex">
           Get Available Ticket{" "}
           <Ticket size={24} className="ml-2" strokeWidth={1.5} />
         </div>
 
-        <div className="flex justify-between items-center">
-          <div className="flex justify-start items-center">
+        <div className="flex flex-col gap-3 mb-3 sm:mb-0 sm:flex-row sm:justify-between sm:items-center">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             {/* searchbar */}
             <div className="flex items-center py-4">
               <InputGroup className="max-w-sm border-slight-black">
@@ -146,7 +146,7 @@ export default function Main() {
             </div>
 
             {/* Search by menu */}
-            <div className="ml-2">
+            <div className="">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -176,7 +176,7 @@ export default function Main() {
           </div>
 
           {/* date range filter */}
-          <div className="flex items-center gap-2 ml-2">
+          <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
