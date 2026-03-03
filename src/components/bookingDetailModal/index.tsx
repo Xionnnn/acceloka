@@ -28,11 +28,15 @@ export function BookingDetailModal({
   details,
   onRevoke,
 }: BookingDetailModalProps) {
-  const [revokeQuantities, setRevokeQuantities] = useState<Record<string, number>>({});
+  const [revokeQuantities, setRevokeQuantities] = useState<
+    Record<string, number>
+  >({});
   const [prevBookingId, setPrevBookingId] = useState<number | null>(null);
+  const [prevDetails, setPrevDetails] = useState<BookingDetailInterface[]>([]);
 
-  if (bookingId !== prevBookingId) {
+  if (bookingId !== prevBookingId || details !== prevDetails) {
     setPrevBookingId(bookingId);
+    setPrevDetails(details);
     setRevokeQuantities({});
   }
 

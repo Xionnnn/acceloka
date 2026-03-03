@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { BookingDetailInterface } from "@/models/bookingDetail-interface";
 import { CartItemInterface } from "@/models/cartItem-interface";
 import { Button } from "@/components/ui/button";
@@ -58,11 +58,14 @@ export function EditTicketModal({
 
   const [tickets, setTickets] = useState<EditableTicket[]>(initialTickets);
   const [prevBookingId, setPrevBookingId] = useState<number | null>(null);
+  const [prevDetails, setPrevDetails] = useState<BookingDetailInterface[]>([]);
 
-  if (bookingId !== prevBookingId) {
+  if (bookingId !== prevBookingId || details !== prevDetails) {
     setPrevBookingId(bookingId);
+    setPrevDetails(details);
     setTickets(initialTickets);
   }
+  
 
   const updateQuantity = (ticketCode: string, delta: number) => {
     setTickets((prev) =>
